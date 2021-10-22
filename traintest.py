@@ -6,10 +6,8 @@
 # @File    : traintest.py
 
 # train and test the model
-
 import sys
 import os
-import numpy as np
 import time
 from torch.utils.data import Dataset, DataLoader
 
@@ -25,14 +23,14 @@ parser.add_argument("--exp-dir", type=str, default="./exp/", help="directory to 
 parser.add_argument('--lr', '--learning-rate', default=1e-3, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument("--n-epochs", type=int, default=100, help="number of maximum training epochs")
 parser.add_argument("--lr_patience", type=int, default=2, help="how many epoch to wait to reduce lr if mAP doesn't improve")
-parser.add_argument("--astdepth", type=int, default=1, help="depth of ast model")
-parser.add_argument("--astheads", type=int, default=1, help="heads of ast model")
-parser.add_argument("--batch_size", type=int, default=25, help="heads of ast model")
-parser.add_argument("--embed_dim", type=int, default=12, help="heads of ast model")
-parser.add_argument("--loss_w_phn", type=float, default=1, help="heads of ast model")
-parser.add_argument("--loss_w_utt", type=float, default=1, help="heads of ast model")
-parser.add_argument("--loss_w_word", type=float, default=1, help="heads of ast model")
-parser.add_argument("--model", type=str, default='nowa', help="name of the model")
+parser.add_argument("--goptdepth", type=int, default=1, help="depth of gopt model")
+parser.add_argument("--goptheads", type=int, default=1, help="heads of gopt model")
+parser.add_argument("--batch_size", type=int, default=25, help="heads of gopt model")
+parser.add_argument("--embed_dim", type=int, default=12, help="heads of gopt model")
+parser.add_argument("--loss_w_phn", type=float, default=1, help="heads of gopt model")
+parser.add_argument("--loss_w_utt", type=float, default=1, help="heads of gopt model")
+parser.add_argument("--loss_w_word", type=float, default=1, help="heads of gopt model")
+parser.add_argument("--model", type=str, default='gopt', help="name of the model")
 parser.add_argument("--am", type=str, default='librispeech', help="name of the acoustic model")
 parser.add_argument("--noise", type=float, default=0., help="the scale of random noise added on the input GoP feature")
 
@@ -56,7 +54,6 @@ def train(audio_model, train_loader, test_loader, args):
     optimizer = torch.optim.Adam(trainables, args.lr, weight_decay=5e-7, betas=(0.95, 0.999))
 
     # TODO: need to change it to fixed learning rate scheduler
-    #scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=args.lr_patience, verbose=True)
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, list(range(20, 100, 5)), gamma=0.5, last_epoch=-1)
 
     loss_fn = nn.MSELoss()
@@ -152,10 +149,7 @@ def train(audio_model, train_loader, test_loader, args):
             torch.save(audio_model.state_dict(), "%s/models/best_audio_model.pth" % (exp_dir))
 
         if global_step > warm_up_step:
-            #scheduler.step(-te_mse)
             scheduler.step()
-        # if optimizer.param_groups[0]['lr'] < 1e-7 and global_step > warm_up_step:
-        #     break
 
         print('Epoch-{0} lr: {1}'.format(epoch, optimizer.param_groups[0]['lr']))
         epoch += 1
@@ -293,10 +287,6 @@ def valid_word(audio_output, target):
     valid_token_pred = np.array(valid_token_pred).round(2)
     valid_token_target = np.array(valid_token_target).round(2)
 
-    # unique, counts = np.unique(valid_token_target, return_counts=True)
-    # print(dict(zip(unique, counts)))
-    #exit()
-
     mse_list, corr_list = [], []
     for i in range(3):
         valid_token_mse = np.mean((valid_token_target[:, i] - valid_token_pred[:, i]) ** 2)
@@ -358,7 +348,6 @@ class GoPDataset(Dataset):
         # feat, phn_label, phn_id, utt_label, word_label
         return self.feat[idx, :], self.phn_label[idx, :, 1], self.phn_label[idx, :, 0], self.utt_label[idx, :], self.word_label[idx, :]
 
-
 args = parser.parse_args()
 
 am = args.am
@@ -366,35 +355,23 @@ print('now train with {:s} acoustic model'.format(am))
 feat_dim = {'librispeech':84, 'paiia':86, 'paiib': 88}
 input_dim=feat_dim[am]
 
-if args.model == 'full':
-    print('now train a full model')
-    audio_mdl = ASTCondRawMultiWordPosW(embed_dim=args.embed_dim, num_heads=args.astheads, depth=args.astdepth, input_dim=input_dim)
 # nowa is the best model used in this work
-elif args.model == 'nowa':
-    print('now train a only pos model')
-    audio_mdl = ASTCondRawMultiWordPos(embed_dim=args.embed_dim, num_heads=args.astheads, depth=args.astdepth, input_dim=input_dim)
+if args.model == 'gopt':
+    print('now train a GOPT model')
+    audio_mdl = GOPT(embed_dim=args.embed_dim, num_heads=args.goptheads, depth=args.goptdepth, input_dim=input_dim)
 # for ablation study
-elif args.model == 'nowaphn':
-    print('now train a only pos model')
-    audio_mdl = ASTCondRawMultiWordPosNoPhn(embed_dim=args.embed_dim, num_heads=args.astheads, depth=args.astdepth, input_dim=input_dim)
-elif args.model == 'nowapos':
-    print('now train a no wa no pos model')
-    audio_mdl = ASTCondRawMultiWord(embed_dim=args.embed_dim, num_heads=args.astheads, depth=args.astdepth)
-elif args.model == 'nn':
-    print('now train a baseline NN model')
-    audio_mdl = BaselineNN(embed_dim=args.embed_dim, num_heads=args.astheads, depth=args.astdepth, input_dim=input_dim)
+elif args.model == 'gopt_nophn':
+    print('now train a GOPT model without canonical phone embedding')
+    audio_mdl = GOPTNoPhn(embed_dim=args.embed_dim, num_heads=args.goptheads, depth=args.goptdepth, input_dim=input_dim)
 elif args.model == 'lstm':
     print('now train a baseline LSTM model')
-    audio_mdl = BaselineLSTM(embed_dim=args.embed_dim, num_heads=args.astheads, depth=args.astdepth, input_dim=input_dim)
+    audio_mdl = BaselineLSTM(embed_dim=args.embed_dim, depth=args.goptdepth, input_dim=input_dim)
 
 samples_weight = np.loadtxt('/data/sls/scratch/yuangong/l2speak/src/gop_research/seq_data/tr_label_weight.csv', delimiter=',')
 sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
 
 tr_dataset = GoPDataset('train', am=am)
-
-#tr_dataloader = DataLoader(tr_dataset, batch_size=args.batch_size, sampler=sampler)
 tr_dataloader = DataLoader(tr_dataset, batch_size=args.batch_size, shuffle=True)
-
 te_dataset = GoPDataset('test', am=am)
 te_dataloader = DataLoader(te_dataset, batch_size=2500, shuffle=False)
 
