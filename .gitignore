@@ -1,0 +1,4 @@
+*.csv
+data/*
+data/!readme.md
+data.zip
