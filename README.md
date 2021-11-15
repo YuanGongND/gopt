@@ -1,4 +1,4 @@
-# GOPT: Transformer-Based Multi-Aspect Multi-Granularity Non-Native English Speaker Pronunciation Assessment.
+# GOPT: Transformer-Based Multi-Aspect Multi-Granularity Non-Native English Speaker Pronunciation Assessment
  - [Introduction](#Introduction)
  - [Citing](#Citing)  
  - [Run GOPT](#Getting-Started)
