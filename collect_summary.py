@@ -16,6 +16,7 @@ parser.add_argument("--exp-dir", type=str, default="./test", help="directory to 
 args = parser.parse_args()
 
 result = []
+# for each repeat experiment
 for i in range(1, 10):
     cur_exp_dir = args.exp_dir + '-' + str(i)
     print(cur_exp_dir)
@@ -23,24 +24,15 @@ for i in range(1, 10):
         try:
             print(cur_exp_dir)
             cur_res = np.loadtxt(cur_exp_dir + '/result.csv', delimiter=',')
-            for cand_epoch in range(cur_res.shape[0] - 1, -1, -1):
-                if cur_res[cand_epoch, 0] > 5e-03:
+            for last_epoch in range(cur_res.shape[0] - 1, -1, -1):
+                if cur_res[last_epoch, 0] > 5e-03:
                     break
-            trained_epoch = cand_epoch
-            train_mse = cur_res[:, 0]
-            train_corr = cur_res[:, 1]
-            test_mse = cur_res[:, 2]
-            test_corr = cur_res[:, 3]
-            total_corr = cur_res[:, -1]
-
-            print(max(test_corr))
-            #best_epoch = np.argmax(test_corr)
-            best_epoch = cand_epoch
-            result.append(cur_res[best_epoch, 1:])
+            result.append(cur_res[last_epoch, 1:])
         except:
             pass
 
 result = np.array(result)
+# get mean / std of the repeat experiments.
 result_mean = np.mean(result, axis=0)
 result_std = np.std(result, axis=0)
 if os.path.exists(args.exp_dir) == False:

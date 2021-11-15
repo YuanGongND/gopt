@@ -53,7 +53,6 @@ def train(audio_model, train_loader, test_loader, args):
     print('Total trainable parameter number is : {:.3f} k'.format(sum(p.numel() for p in trainables) / 1e3))
     optimizer = torch.optim.Adam(trainables, args.lr, weight_decay=5e-7, betas=(0.95, 0.999))
 
-    # TODO: need to change it to fixed learning rate scheduler
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, list(range(20, 100, 5)), gamma=0.5, last_epoch=-1)
 
     loss_fn = nn.MSELoss()
@@ -96,7 +95,7 @@ def train(audio_model, train_loader, test_loader, args):
 
             loss_phn = loss_fn(p, phn_label)
 
-            # print((mask.shape[0] * mask.shape[1]))
+            # avoid the 0 losses of the padded tokens impacting the performance
             loss_phn = loss_phn * (mask.shape[0] * mask.shape[1]) / torch.sum(mask)
 
             # utterance level loss, also mse
@@ -127,7 +126,7 @@ def train(audio_model, train_loader, test_loader, args):
         te_mse, te_corr, te_utt_mse, te_utt_corr, te_word_mse, te_word_corr = validate(audio_model, test_loader, args, best_mse)
 
         print('Phone: Test MSE: {:.3f}, CORR: {:.3f}'.format(te_mse.item(), te_corr))
-        print('Utt:, ACC: {:.3f}, COM: {:.3f}, FLU: {:.3f}, PROC: {:.3f}, Total: {:.3f}'.format(te_utt_corr[0], te_utt_corr[1], te_utt_corr[2], te_utt_corr[3], te_utt_corr[4]))
+        print('Utterance:, ACC: {:.3f}, COM: {:.3f}, FLU: {:.3f}, PROC: {:.3f}, Total: {:.3f}'.format(te_utt_corr[0], te_utt_corr[1], te_utt_corr[2], te_utt_corr[3], te_utt_corr[4]))
         print('Word:, ACC: {:.3f}, Stress: {:.3f}, Total: {:.3f}'.format(te_word_corr[0], te_word_corr[1], te_word_corr[2]))
 
         result[epoch, :5] = [tr_mse, tr_corr, te_mse, te_corr, optimizer.param_groups[0]['lr']]
@@ -229,6 +228,7 @@ def validate(audio_model, val_loader, args, best_mse):
 def valid_phn(audio_output, target):
     valid_token_pred = []
     valid_token_target = []
+    audio_output = audio_output.squeeze(2)
     for i in range(audio_output.shape[0]):
         for j in range(audio_output.shape[1]):
             if target[i, j] >= 0:
@@ -236,6 +236,7 @@ def valid_phn(audio_output, target):
                 valid_token_target.append(target[i, j])
     valid_token_target = np.array(valid_token_target)
     valid_token_pred = np.array(valid_token_pred)
+
     valid_token_mse = np.mean((valid_token_target - valid_token_pred) ** 2)
     corr = np.corrcoef(valid_token_pred, valid_token_target)[0, 1]
     return valid_token_mse, corr
@@ -269,22 +270,19 @@ def valid_word(audio_output, target):
         for j in range(target.shape[1]):
             cur_w_id = word_id[i, j].int()
             if cur_w_id != prev_w_id:
-                # print(target[i, start_id: j, :])
-                # print(np.mean(target[i, start_id: j, :].numpy(), axis=0))
+                # average each phone belongs to the word
                 valid_token_pred.append(np.mean(audio_output[i, start_id: j, :].numpy(), axis=0))
                 valid_token_target.append(np.mean(target[i, start_id: j, :].numpy(), axis=0))
                 if len(torch.unique(target[i, start_id: j, 1])) != 1:
                     print(target[i, start_id: j, 0])
-                # valid_token_pred.append(torch.mean(audio_output[i, start_id: j, :], dim=0).detach().cpu().numpy())
-                # valid_token_target.append(torch.mean(target[i, start_id: j, :], dim=0).detach().cpu().numpy())
-                # reach the end of valid utterance
                 if cur_w_id == -1:
                     break
                 else:
                     prev_w_id = cur_w_id
                     start_id = j
 
-    valid_token_pred = np.array(valid_token_pred).round(2)
+    valid_token_pred = np.array(valid_token_pred)
+    # this rounding is solving the precision issue in the label
     valid_token_target = np.array(valid_token_target).round(2)
 
     mse_list, corr_list = [], []
@@ -376,5 +374,3 @@ te_dataset = GoPDataset('test', am=am)
 te_dataloader = DataLoader(te_dataset, batch_size=2500, shuffle=False)
 
 train(audio_mdl, tr_dataloader, te_dataloader, args)
-
-
