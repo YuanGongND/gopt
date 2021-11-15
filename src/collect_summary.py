@@ -17,7 +17,7 @@ args = parser.parse_args()
 
 result = []
 # for each repeat experiment
-for i in range(1, 10):
+for i in range(0, 10):
     cur_exp_dir = args.exp_dir + '-' + str(i)
     print(cur_exp_dir)
     if os.path.isfile(cur_exp_dir + '/result.csv'):
@@ -27,7 +27,7 @@ for i in range(1, 10):
             for last_epoch in range(cur_res.shape[0] - 1, -1, -1):
                 if cur_res[last_epoch, 0] > 5e-03:
                     break
-            result.append(cur_res[last_epoch, 1:])
+            result.append(cur_res[last_epoch, 2:])
         except:
             pass
 

@@ -5,6 +5,7 @@
 # @Email   : yuangong@mit.edu
 # @File    : gopt.py
 
+# attention part is borrowed from the timm package.
 
 import math
 import warnings

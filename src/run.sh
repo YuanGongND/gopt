@@ -21,9 +21,9 @@ head=1
 batch_size=25
 embed_dim=24
 model=gopt
-am=paiib
+am=librispeech
 
-exp_dir=./exp/gopt-${lr}-${depth}-${head}-${batch_size}-${embed_dim}-${model}-${am}
+exp_dir=../exp/gopt-${lr}-${depth}-${head}-${batch_size}-${embed_dim}-${model}-${am}
 
 repeat_list=(0 1 2 3 4)
 

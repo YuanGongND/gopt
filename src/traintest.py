@@ -5,7 +5,7 @@
 # @Email   : yuangong@mit.edu
 # @File    : traintest.py
 
-# train and test the model
+# train and test the models
 import sys
 import os
 import time
@@ -22,16 +22,15 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--exp-dir", type=str, default="./exp/", help="directory to dump experiments")
 parser.add_argument('--lr', '--learning-rate', default=1e-3, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument("--n-epochs", type=int, default=100, help="number of maximum training epochs")
-parser.add_argument("--lr_patience", type=int, default=2, help="how many epoch to wait to reduce lr if mAP doesn't improve")
-parser.add_argument("--goptdepth", type=int, default=1, help="depth of gopt model")
-parser.add_argument("--goptheads", type=int, default=1, help="heads of gopt model")
-parser.add_argument("--batch_size", type=int, default=25, help="heads of gopt model")
-parser.add_argument("--embed_dim", type=int, default=12, help="heads of gopt model")
-parser.add_argument("--loss_w_phn", type=float, default=1, help="heads of gopt model")
-parser.add_argument("--loss_w_utt", type=float, default=1, help="heads of gopt model")
-parser.add_argument("--loss_w_word", type=float, default=1, help="heads of gopt model")
+parser.add_argument("--goptdepth", type=int, default=1, help="depth of gopt models")
+parser.add_argument("--goptheads", type=int, default=1, help="heads of gopt models")
+parser.add_argument("--batch_size", type=int, default=25, help="training batch size")
+parser.add_argument("--embed_dim", type=int, default=12, help="gopt transformer embedding dimension")
+parser.add_argument("--loss_w_phn", type=float, default=1, help="weight for phoneme-level loss")
+parser.add_argument("--loss_w_word", type=float, default=1, help="weight for word-level loss")
+parser.add_argument("--loss_w_utt", type=float, default=1, help="weight for utterance-level loss")
 parser.add_argument("--model", type=str, default='gopt', help="name of the model")
-parser.add_argument("--am", type=str, default='librispeech', help="name of the acoustic model")
+parser.add_argument("--am", type=str, default='librispeech', help="name of the acoustic models")
 parser.add_argument("--noise", type=float, default=0., help="the scale of random noise added on the input GoP feature")
 
 def train(audio_model, train_loader, test_loader, args):
@@ -349,21 +348,18 @@ class GoPDataset(Dataset):
 args = parser.parse_args()
 
 am = args.am
-print('now train with {:s} acoustic model'.format(am))
+print('now train with {:s} acoustic models'.format(am))
 feat_dim = {'librispeech':84, 'paiia':86, 'paiib': 88}
 input_dim=feat_dim[am]
 
-# nowa is the best model used in this work
+# nowa is the best models used in this work
 if args.model == 'gopt':
-    print('now train a GOPT model')
+    print('now train a GOPT models')
     audio_mdl = GOPT(embed_dim=args.embed_dim, num_heads=args.goptheads, depth=args.goptdepth, input_dim=input_dim)
-# for ablation study
+# for ablation study only
 elif args.model == 'gopt_nophn':
-    print('now train a GOPT model without canonical phone embedding')
+    print('now train a GOPT models without canonical phone embedding')
     audio_mdl = GOPTNoPhn(embed_dim=args.embed_dim, num_heads=args.goptheads, depth=args.goptdepth, input_dim=input_dim)
-elif args.model == 'lstm':
-    print('now train a baseline LSTM model')
-    audio_mdl = BaselineLSTM(embed_dim=args.embed_dim, depth=args.goptdepth, input_dim=input_dim)
 
 samples_weight = np.loadtxt('/data/sls/scratch/yuangong/l2speak/src/gop_research/seq_data/tr_label_weight.csv', delimiter=',')
 sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
