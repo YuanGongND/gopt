@@ -11,7 +11,7 @@
 
 ## Introduction  
 
-<p align="center"><img src="https://github.com/YuanGongND/ast/blob/master/ast.png?raw=true" alt="Illustration of AST." width="300"/></p>
+<p align="center"><img src="https://raw.githubusercontent.com/YuanGongND/gopt/master/figure/gopt.png?token=AEC6JZXNM2T3SJNHAIZ5QW3BTPH6I" alt="Illustration of AST." width="800"/></p>
 
 This repository contains the official implementation (in PyTorch) of the **Audio Spectrogram Transformer (AST)** proposed in the Interspeech 2021 paper [AST: Audio Spectrogram Transformer](https://arxiv.org/abs/2104.01778) (Yuan Gong, Yu-An Chung, James Glass).  
 
