@@ -1,5 +1,7 @@
 *.csv
 .DS_Store
 data/*
-data/!readme.md
+!data/README.md
 data.zip
+pretrained_model/*
+!pretrained_model/README.md

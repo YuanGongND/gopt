@@ -5,7 +5,7 @@
 # @Email   : yuangong@mit.edu
 # @File    : gen_seq_data_phn.py
 
-# Generate sequence phone input and label, for seq2seq models.
+# Generate sequence phone input and label for seq2seq models from raw Kaldi GOP features.
 
 import numpy as np
 
@@ -74,7 +74,7 @@ def gen_phn_dict(label):
             phn_idx += 1
     return phn_dict
 
-# sequence training data
+# generate sequence training data
 tr_feat = load_feat('../../data/so762_datafiles_new/yuan_tr_feats_phn_0.1.csv')
 tr_keys = load_keys('../so762_datafiles_new/yuan_tr_keys_phn_0.1.csv')
 tr_label = load_label('../so762_datafiles_new/yuan_tr_labels_phn_0.1.csv')
@@ -83,11 +83,10 @@ print(phn_dict)
 tr_feat, tr_label = process_feat_seq(tr_feat, tr_keys, tr_label, phn_dict)
 print(tr_feat.shape)
 print(tr_label.shape)
-#print(tr_label[2:])
 np.save('seq_data_new/tr_feat_phn_0.1.npy', tr_feat)
 np.save('seq_data_new/tr_label_phn_0.1.npy', tr_label)
 
-# sequence test data
+# generate sequence test data
 te_feat = load_feat('../so762_datafiles_new/yuan_te_feats_phn_0.1.csv')
 te_keys = load_keys('../so762_datafiles_new/yuan_te_keys_phn_0.1.csv')
 te_label = load_label('../so762_datafiles_new/yuan_te_labels_phn_0.1.csv')
