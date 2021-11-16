@@ -1,5 +1,4 @@
 *.csv
-.idea/*
 .DS_Store
 data/*
 data/!readme.md
