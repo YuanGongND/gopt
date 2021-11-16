@@ -46,7 +46,7 @@ Then, extract the GOP features from the intermediate files of the Kaldi GOP reci
 
 ```
 kaldi_path=your_kaldi_path
-cp src/extract_kaldi_gop/{extract_gop_feats.py,extract_gop_feats_word.py ${kaldi_path}/egs/speechocean762/s5/local/
+cp src/extract_kaldi_gop/{extract_gop_feats.py,extract_gop_feats_word.py} ${kaldi_path}/egs/speechocean762/s5/local/
 cd ${kaldi_path}/egs/speechocean762/s5
 python local/extract_gop_feats.py
 python local/extract_gop_feats_word.py
