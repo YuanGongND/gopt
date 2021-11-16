@@ -67,12 +67,12 @@ def main(args, set):
 
     if set == 'test':
         np.savetxt('gopt_feats/te_feats.csv', features, delimiter=',')
-        np.savetxt('gopt_feats/te_keys.csv', keys, delimiter=',', fmt='%s')
-        np.savetxt('gopt_feats/te_labels.csv', lables, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/te_keys_phn.csv', keys, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/te_labels_phn.csv', lables, delimiter=',', fmt='%s')
     elif set == 'train':
-        np.savetxt('gopt_feats/tr_feats.csv', features, delimiter=',')
-        np.savetxt('gopt_feats/tr_keys.csv', keys, delimiter=',', fmt='%s')
-        np.savetxt('gopt_feats/tr_labels.csv', lables, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/tr_feats_phn.csv', features, delimiter=',')
+        np.savetxt('gopt_feats/tr_keys_phn.csv', keys, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/tr_labels_phn.csv', lables, delimiter=',', fmt='%s')
 
 if __name__ == '__main__':
     args = get_args()

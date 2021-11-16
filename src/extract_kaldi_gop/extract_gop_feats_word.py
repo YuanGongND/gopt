@@ -96,8 +96,8 @@ def main(args, set):
         np.savetxt('gopt_feats/te_labels_word.csv', lables, delimiter=',', fmt='%s')
     elif set == 'train':
         #np.savetxt('gopt_feats/yuan_tr_feats_word.csv', features, delimiter=',')
-        np.savetxt('gopt_feats/yuan_tr_keys_word.csv', keys, delimiter=',', fmt='%s')
-        np.savetxt('gopt_feats/yuan_tr_labels_word.csv', lables, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/tr_keys_word.csv', keys, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/tr_labels_word.csv', lables, delimiter=',', fmt='%s')
 
 if __name__ == '__main__':
     args = get_args()

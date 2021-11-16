@@ -46,13 +46,16 @@ Then, extract the GOP features from the intermediate files of the Kaldi GOP reci
 
 ```
 kaldi_path=your_kaldi_path
+gopt_path=your_gopt_path
+cd $gopt_path
+mkdir -p data/raw_kaldi_gop/librispeech
 cp src/extract_kaldi_gop/{extract_gop_feats.py,extract_gop_feats_word.py} ${kaldi_path}/egs/speechocean762/s5/local/
 cd ${kaldi_path}/egs/speechocean762/s5
 python local/extract_gop_feats.py
 python local/extract_gop_feats_word.py
-cp ${kaldi_path}
+cd $gopt_path
+cp -r ${kaldi_path}/egs/speechocean762/s5/gopt_feats/* data/raw_kaldi_gop/librispeech
 ```
-
 
 **Step 2. Convert GOP features and labels to sequences**
 
@@ -60,6 +63,14 @@ The Kaldi output GOP features and labels are at phone level. To model pronunciat
 Specifically, we pad all utterance into 50 tokens (phones) with -1, i.e., ``seq_len=50``. The padded tokens are masked out for any metric calculation. 
 
 Use the following scripts for this step:
+```
+mkdir data/seq_data_librispeech
+cd src/prep_data
+python gen_seq_data_phn.py
+python gen_seq_data_word.py
+python gen_seq_data_word.py
+```
+
 
 **Step 3. Run Training and Evaluation**
 
