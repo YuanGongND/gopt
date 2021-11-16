@@ -4,5 +4,4 @@ data/*
 data.zip
 data_old/*
 src/temp/*
-.gitignore
 models/baseline.py
