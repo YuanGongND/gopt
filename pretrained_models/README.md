@@ -1,5 +1,5 @@
-- **Pretrained GOPT Models**: We provide three pretrained GOPT models trained with various GOP features. These models generally perform better than the results reported in the paper because we report mean result of 5 runs with different random seeds in the paper while release the best model.
-
+- **Pretrained GOPT Models**: We provide three pretrained GOPT models trained with various GOP features. These models generally perform better than the results reported in the paper because we report mean result of 5 runs with different random seeds in the paper while release the best model. See ``load_model.py`` for sample code of loading a GOPT model.
+    
     |                    | Phn MSE | Phn PCC | Word Acc PCC | Word Str PCC | Word Total PCC | Utt Acc PCC | Utt Comp PCC | Utt Flu PCC | Utt Pros PCC | Utt Total PCC |
     |--------------------|:-------:|:-------:|:------------:|:------------:|:--------------:|:-----------:|:------------:|:-----------:|:------------:|:-------------:|
     | GOPT (Librispeech) |  0.084  |  0.616  |     0.536    |     0.326    |      0.552     |    0.718    |     0.109    |    0.756    |     0.764    |     0.743     |
