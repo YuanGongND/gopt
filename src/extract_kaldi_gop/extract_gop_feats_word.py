@@ -81,7 +81,6 @@ def main(args, set):
         if ph in range(args.min_phone_idx, args.max_phone_idx + 1):
             if phone_int2sym is not None and ph in phone_int2sym:
                 ph = phone_int2sym[ph]
-            # lables.append(f'{ph}-{score_of[key]}')
             keys.append(key)
             features.append(feat)
             lables.append([ph, word_id_of[key], word_of[key], accuracy_of[key], stress_of[key], total_of[key]])
@@ -92,16 +91,15 @@ def main(args, set):
         os.mkdir('gopt_feats')
 
     if set == 'test':
-        np.savetxt('yuan_gop_feats/yuan_te_feats_word.csv', features, delimiter=',')
-        np.savetxt('yuan_gop_feats/yuan_te_keys_word.csv', keys, delimiter=',', fmt='%s')
-        np.savetxt('yuan_gop_feats/yuan_te_labels_word.csv', lables, delimiter=',', fmt='%s')
+        #np.savetxt('gopt_feats/te_feats_word.csv', features, delimiter=',')
+        np.savetxt('gopt_feats/te_keys_word.csv', keys, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/te_labels_word.csv', lables, delimiter=',', fmt='%s')
     elif set == 'train':
-        np.savetxt('yuan_gop_feats/yuan_tr_feats_word.csv', features, delimiter=',')
-        np.savetxt('yuan_gop_feats/yuan_tr_keys_word.csv', keys, delimiter=',', fmt='%s')
-        np.savetxt('yuan_gop_feats/yuan_tr_labels_word.csv', lables, delimiter=',', fmt='%s')
+        #np.savetxt('gopt_feats/yuan_tr_feats_word.csv', features, delimiter=',')
+        np.savetxt('gopt_feats/yuan_tr_keys_word.csv', keys, delimiter=',', fmt='%s')
+        np.savetxt('gopt_feats/yuan_tr_labels_word.csv', lables, delimiter=',', fmt='%s')
 
 if __name__ == '__main__':
     args = get_args()
     main(args, 'train')
-
     main(args, 'test')

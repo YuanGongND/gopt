@@ -295,6 +295,7 @@ def valid_word(audio_output, target):
 
 class GoPDataset(Dataset):
     def __init__(self, set, am='librispeech'):
+        # normalize the input to 0 mean and unit std.
         if am=='librispeech':
             dir='seq_data_librispeech'
             norm_mean, norm_std = 3.203, 4.045
@@ -308,17 +309,17 @@ class GoPDataset(Dataset):
             raise ValueError('Acoustic Model Unrecognized.')
 
         if set == 'train':
-            self.feat = torch.tensor(np.load('./data/'+dir+'/tr_feat.npy'), dtype=torch.float)
-            self.phn_label = torch.tensor(np.load('./data/'+dir+'/tr_label_phn.npy'), dtype=torch.float)
-            self.utt_label = torch.tensor(np.load('./data/'+dir+'/tr_label_utt.npy'), dtype=torch.float)
-            self.word_label = torch.tensor(np.load('./data/'+dir+'/tr_label_word.npy'), dtype=torch.float)
+            self.feat = torch.tensor(np.load('../data/'+dir+'/tr_feat.npy'), dtype=torch.float)
+            self.phn_label = torch.tensor(np.load('../data/'+dir+'/tr_label_phn.npy'), dtype=torch.float)
+            self.utt_label = torch.tensor(np.load('../data/'+dir+'/tr_label_utt.npy'), dtype=torch.float)
+            self.word_label = torch.tensor(np.load('../data/'+dir+'/tr_label_word.npy'), dtype=torch.float)
         elif set == 'test':
-            self.feat = torch.tensor(np.load('./data/'+dir+'/te_feat.npy'), dtype=torch.float)
-            self.phn_label = torch.tensor(np.load('./data/'+dir+'/te_label_phn.npy'), dtype=torch.float)
-            self.utt_label = torch.tensor(np.load('./data/'+dir+'/te_label_utt.npy'), dtype=torch.float)
-            self.word_label = torch.tensor(np.load('./data/'+dir+'/te_label_word.npy'), dtype=torch.float)
+            self.feat = torch.tensor(np.load('../data/'+dir+'/te_feat.npy'), dtype=torch.float)
+            self.phn_label = torch.tensor(np.load('../data/'+dir+'/te_label_phn.npy'), dtype=torch.float)
+            self.utt_label = torch.tensor(np.load('../data/'+dir+'/te_label_utt.npy'), dtype=torch.float)
+            self.word_label = torch.tensor(np.load('../data/'+dir+'/te_label_word.npy'), dtype=torch.float)
 
-        # normalize the GoP feature using the training set mean and std (only count the valid token features, exclude the padded tokens).
+        # normalize the GOP feature using the training set mean and std (only count the valid token features, exclude the padded tokens).
         self.feat = self.norm_valid(self.feat, norm_mean, norm_std)
 
         # normalize the utt_label to 0-2 (same with phn score range)
@@ -360,9 +361,6 @@ if args.model == 'gopt':
 elif args.model == 'gopt_nophn':
     print('now train a GOPT models without canonical phone embedding')
     audio_mdl = GOPTNoPhn(embed_dim=args.embed_dim, num_heads=args.goptheads, depth=args.goptdepth, input_dim=input_dim)
-
-samples_weight = np.loadtxt('/data/sls/scratch/yuangong/l2speak/src/gop_research/seq_data/tr_label_weight.csv', delimiter=',')
-sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
 
 tr_dataset = GoPDataset('train', am=am)
 tr_dataloader = DataLoader(tr_dataset, batch_size=args.batch_size, shuffle=True)

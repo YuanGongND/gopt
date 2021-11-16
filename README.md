@@ -38,19 +38,40 @@ pip install -r requirements.txt
 
 **Step 1. Prepare the speechocean762 dataset and generate the Godness of Pronunciation (GOP) features.**
 
-(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step by using our output of this step, which can be downloaded [here]().)
+(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step by using our output of this step ([download]()).)
 
-Downlod the [speechocean762](https://arxiv.org/abs/2104.01378) dataset from [here](https://www.openslr.org/101/). Use your own Kaldi ASR model or public Kaldi ASR model (e.g., the [Librispeech ASR Chain Model](https://kaldi-asr.org/models/m13) we used) and run [Kaldi GOP recipe](https://github.com/kaldi-asr/kaldi/tree/master/egs/gop_speechocean762). After the run finishes, you should see the performance of the baseline model with the ASR model you use.
+Downlod the [speechocean762](https://arxiv.org/abs/2104.01378) dataset from [here](https://www.openslr.org/101/). Use your own Kaldi ASR model or public Kaldi ASR model (e.g., the [Librispeech ASR Chain Model](https://kaldi-asr.org/models/m13) we used) and run [Kaldi GOP recipe](https://github.com/kaldi-asr/kaldi/tree/master/egs/gop_speechocean762) following its instruction. After the run finishes, you should see the performance of the baseline model with the ASR model you use.
 
-Then, extract the GOP features from the intermediate files of the Kaldi recipe run. Put ``load_gop_feats.py`` and ``load_gop_feats_word.py`` in ``your_kaldi_path/egs/speechocean762/s5/local/``. Go back to (``cd ../``) to ``/speechocean762/s5/``, and run both scripts by ``python local/load_gop_feats.py`` and ``python local/load_gop_feats_word.py``. 
-You can use the same python environment as the recipe (our environment is in requirement.txt). ’load_gop_feats.py’ script will save 12 files in /speechocean762/s5/yuan_gop_feats/ and ‘load_gop_feats_word.py’ will save 6 files; please send me these files (if you have 3 AMs, each will have 12+6 outputs, and in total 54 files).
+Then, extract the GOP features from the intermediate files of the Kaldi GOP recipe run. 
 
-**Step 2. Convert Kaldi Output to Se**
+```
+kaldi_path=your_kaldi_path
+cp src/extract_kaldi_gop/{extract_gop_feats.py,extract_gop_feats_word.py ${kaldi_path}/egs/speechocean762/s5/local/
+cd ${kaldi_path}/egs/speechocean762/s5
+python local/extract_gop_feats.py
+python local/extract_gop_feats_word.py
+cp ${kaldi_path}
+```
 
-The output GOP features are at phone level. To model pronunciation assessment as a sequence-to-sequence problem, we need to convert to 
 
+**Step 2. Convert GOP features and labels to sequences**
 
-**Step 2. Test the AST model**
+The Kaldi output GOP features and labels are at phone level. To model pronunciation assessment as a sequence-to-sequence problem, we need to convert the feature to shape like ``[#utterance, seq_len, feat_dim]``. 
+Specifically, we pad all utterance into 50 tokens (phones) with -1, i.e., ``seq_len=50``. The padded tokens are masked out for any metric calculation. 
+
+Use the following scripts for this step:
+
+**Step 3. Run Training and Evaluation**
+
+The entry point of the training and evaluation scripts is ``gopt/src/run.sh``, which calls ``gopt/src/traintest.py``, which then calls ``gopt/src/models/gopt.py``.
+Just run the following code snippet.
+
+```
+cd gopt/src
+(slurm user) sbatch run.sh
+(local user) ./run.sh
+```
+Results, best model, and predictions will be saved in the ``exp_dir`` specified in ``gopt/src/run.sh``.
 
 ## Pretrained Models
 We provide three pretrained models and corresponding training logs. They are in ``gopt/pretrained_models/``.

@@ -5,14 +5,10 @@
 # @Email   : yuangong@mit.edu
 # @File    : gen_seq_data_phn.py
 
-# generate sequence input and label, for seq2seq models. Only generate 84 features, not 87
-# also generate the utterance level feature
+# Generate sequence phone input and label for seq2seq models from raw Kaldi GOP features.
 
-from sklearn.svm import SVR
 import numpy as np
 import json
-import pickle
-from sklearn.linear_model import LinearRegression
 
 def load_feat(path):
     file = np.loadtxt(path, delimiter=',')
@@ -32,7 +28,7 @@ def process_label(label):
         pure_label.append(float(label[i, 1]))
     return np.array(pure_label)
 
-def process_feat_seq_word(feat, keys, labels, phn_dict):
+def process_feat_seq_word(feat, keys, labels):
     key_set = []
     for i in range(keys.shape[0]):
         cur_key = keys[i].split('.')[0]
@@ -58,34 +54,22 @@ def process_feat_seq_word(feat, keys, labels, phn_dict):
 
     return seq_label
 
-def gen_phn_dict(label):
-    phn_dict = {}
-    phn_idx = 0
-    for i in range(label.shape[0]):
-        if label[i, 0] not in phn_dict:
-            phn_dict[label[i, 0]] = phn_idx
-            phn_idx += 1
-    return phn_dict
-
 # utt label dict
 with open('scores.json') as f:
     utt2score = json.loads(f.read())
 
 # sequence training data
-tr_feat = load_feat('../so762_datafiles_new/yuan_tr_feats_word_1.0.csv')
-tr_keys = load_keys('../so762_datafiles_new/yuan_tr_keys_word_1.0.csv')
-tr_label = load_label('../so762_datafiles_new/yuan_tr_labels_word_1.0.csv')
-phn_dict = gen_phn_dict(tr_label)
-print(phn_dict)
-tr_label = process_feat_seq_word(tr_feat, tr_keys, tr_label, phn_dict)
+tr_feat = load_feat('../../data/raw_kaldi_gop/librispeech/tr_feats.csv')
+tr_keys = load_keys('../../data/raw_kaldi_gop/librispeech/tr_keys_word.csv')
+tr_label = load_label('../../data/raw_kaldi_gop/librispeech/tr_labels_word.csv')
+tr_label = process_feat_seq_word(tr_feat, tr_keys, tr_label)
 print(tr_label.shape)
-np.save('seq_data_new/tr_label_word.npy', tr_label)
+np.save('../../data/seq_data_librispeech/tr_label_word.npy', tr_label)
 
 # sequence test data
-te_feat = load_feat('../so762_datafiles_new/yuan_te_feats_word_1.0.csv')
-te_keys = load_keys('../so762_datafiles_new/yuan_te_keys_word_1.0.csv')
-te_label = load_label('../so762_datafiles_new/yuan_te_labels_word_1.0.csv')
-te_label = process_feat_seq_word(te_feat, te_keys, te_label, phn_dict)
+te_feat = load_feat('../../data/raw_kaldi_gop/librispeech/te_feats.csv')
+te_keys = load_keys('../../data/raw_kaldi_gop/librispeech/te_keys_word.csv')
+te_label = load_label('../../data/raw_kaldi_gop/librispeech/te_labels_word.csv')
+te_label = process_feat_seq_word(te_feat, te_keys, te_label)
 print(te_label.shape)
-np.save('seq_data_new/te_label_word.npy', te_label)
-
+np.save('../../data/seq_data_librispeech/te_label_word.npy', te_label)

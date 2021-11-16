@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d9d157e4-6b75-4151-9b84-b077e1e9a801" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/extract_kaldi_gop/extract_gop_feats_word.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/extract_kaldi_gop/extract_gop_feats_word.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prep_data/gen_seq_data_phn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prep_data/gen_seq_data_phn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prep_data/gen_seq_data_phn_paii.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prep_data/gen_seq_data_utt.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prep_data/gen_seq_data_utt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prep_data/gen_seq_data_utt_paii.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prep_data/gen_seq_data_word.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prep_data/gen_seq_data_word.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/src/run.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/traintest.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/traintest.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +69,8 @@
       <updated>1634919312348</updated>
       <workItem from="1634919315721" duration="11856000" />
       <workItem from="1636963186698" duration="13381000" />
-      <workItem from="1637033987409" duration="9805000" />
+      <workItem from="1637033987409" duration="11544000" />
+      <workItem from="1637080586934" duration="5473000" />
     </task>
     <servers />
   </component>

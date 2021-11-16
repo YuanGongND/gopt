@@ -5,14 +5,10 @@
 # @Email   : yuangong@mit.edu
 # @File    : gen_seq_data_phn.py
 
-# generate sequence input and label, for seq2seq models. Only generate 84 features, not 87
-# also generate the utterance level feature
+# Generate sequence phone input and label for seq2seq models from raw Kaldi GOP features.
 
-from sklearn.svm import SVR
 import numpy as np
 import json
-import pickle
-from sklearn.linear_model import LinearRegression
 
 def load_feat(path):
     file = np.loadtxt(path, delimiter=',')
@@ -32,7 +28,7 @@ def process_label(label):
         pure_label.append(float(label[i, 1]))
     return np.array(pure_label)
 
-def process_feat_seq_utt(feat, keys, labels, phn_dict, utt2score):
+def process_feat_seq_utt(feat, keys, utt2score):
     key_set = []
     for i in range(keys.shape[0]):
         cur_key = keys[i].split('.')[0]
@@ -51,7 +47,6 @@ def process_feat_seq_utt(feat, keys, labels, phn_dict, utt2score):
         if cur_utt_id != prev_utt_id:
             row += 1
             prev_utt_id = cur_utt_id
-            #print(row)
 
         seq_label[row, 0] = utt2score[cur_utt_id]['accuracy']
         seq_label[row, 1] = utt2score[cur_utt_id]['completeness']
@@ -74,21 +69,19 @@ def gen_phn_dict(label):
 with open('scores.json') as f:
     utt2score = json.loads(f.read())
 
-# sequence training data
+# sequencialize training data
 tr_feat = load_feat('../so762_datafiles/yuan_tr_feats.csv')
 tr_keys = load_keys('../so762_datafiles/yuan_tr_keys.csv')
-tr_label = load_label('../so762_datafiles/yuan_tr_labels.csv')
 phn_dict = gen_phn_dict(tr_label)
 print(phn_dict)
-tr_label = process_feat_seq_utt(tr_feat, tr_keys, tr_label, phn_dict, utt2score)
+tr_label = process_feat_seq_utt(tr_feat, tr_keys, utt2score)
 print(tr_label.shape)
-np.save('seq_data_new/tr_label_utt.npy', tr_label)
+np.save('../../data/seq_data_librispeech/tr_label_utt.npy', tr_label)
 
-# sequence test data
+# sequencialize test data
 te_feat = load_feat('../so762_datafiles/yuan_te_feats.csv')
 te_keys = load_keys('../so762_datafiles/yuan_te_keys.csv')
-te_label = load_label('../so762_datafiles/yuan_te_labels.csv')
-te_label = process_feat_seq_utt(te_feat, te_keys, te_label, phn_dict, utt2score)
+te_label = process_feat_seq_utt(te_feat, te_keys, utt2score)
 print(te_label.shape)
-np.save('seq_data_new/te_label_utt.npy', te_label)
+np.save('../../data/seq_data_librispeech/te_label_utt.npy', te_label)
 

@@ -75,24 +75,23 @@ def gen_phn_dict(label):
     return phn_dict
 
 # generate sequence training data
-tr_feat = load_feat('../../data/so762_datafiles_new/yuan_tr_feats_phn_0.1.csv')
-tr_keys = load_keys('../so762_datafiles_new/yuan_tr_keys_phn_0.1.csv')
-tr_label = load_label('../so762_datafiles_new/yuan_tr_labels_phn_0.1.csv')
+tr_feat = load_feat('../../data/raw_kaldi_gop/librispeech/tr_feats.csv')
+tr_keys = load_keys('../../data/raw_kaldi_gop/librispeech/tr_keys_phn.csv')
+tr_label = load_label('../../data/raw_kaldi_gop/librispeech/tr_labels_phn.csv')
 phn_dict = gen_phn_dict(tr_label)
 print(phn_dict)
 tr_feat, tr_label = process_feat_seq(tr_feat, tr_keys, tr_label, phn_dict)
 print(tr_feat.shape)
 print(tr_label.shape)
-np.save('seq_data_new/tr_feat_phn_0.1.npy', tr_feat)
-np.save('seq_data_new/tr_label_phn_0.1.npy', tr_label)
+np.save('../../data/seq_data_librispeech/tr_feat.npy', tr_feat)
+np.save('../../data/seq_data_librispeech/tr_label_phn.npy', tr_label)
 
 # generate sequence test data
-te_feat = load_feat('../so762_datafiles_new/yuan_te_feats_phn_0.1.csv')
-te_keys = load_keys('../so762_datafiles_new/yuan_te_keys_phn_0.1.csv')
-te_label = load_label('../so762_datafiles_new/yuan_te_labels_phn_0.1.csv')
+te_feat = load_feat('../../data/raw_kaldi_gop/librispeech/te_feats.csv')
+te_keys = load_keys('../../data/raw_kaldi_gop/librispeech/te_keys_phn.csv')
+te_label = load_label('../../data/raw_kaldi_gop/librispeech/te_labels_phn.csv')
 te_feat, te_label = process_feat_seq(te_feat, te_keys, te_label, phn_dict)
 print(te_feat.shape)
 print(te_label.shape)
-np.save('seq_data_new/te_feat_phn_0.1.npy', te_feat)
-np.save('seq_data_new/te_label_phn_0.1.npy', te_label)
-
+np.save('../../data/seq_data_librispeech/te_feat.npy', tr_feat)
+np.save('../../data/seq_data_librispeech/te_label_phn.npy', tr_label)
