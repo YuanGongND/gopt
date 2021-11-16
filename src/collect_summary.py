@@ -26,7 +26,7 @@ for i in range(0, 10):
             for last_epoch in range(cur_res.shape[0] - 1, -1, -1):
                 if cur_res[last_epoch, 0] > 5e-03:
                     break
-            result.append(cur_res[last_epoch, 2:])
+            result.append(cur_res[last_epoch, :])
         except:
             pass
 

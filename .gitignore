@@ -1,5 +1,6 @@
 .DS_Store
 data/*
+data_release/*
 !data/README.md
 data.zip
 data_old/*

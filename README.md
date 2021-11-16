@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 **Step 1. Prepare the speechocean762 dataset and generate the Godness of Pronunciation (GOP) features.**
 
-(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step by using our output of this step ([download]()).)
+(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step and step 2 by using our output of this step ([download](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0)), please see [here]() for details.)
 
 Downlod the [speechocean762](https://arxiv.org/abs/2104.01378) dataset from [here](https://www.openslr.org/101/). Use your own Kaldi ASR model or public Kaldi ASR model (e.g., the [Librispeech ASR Chain Model](https://kaldi-asr.org/models/m13) we used) and run [Kaldi GOP recipe](https://github.com/kaldi-asr/kaldi/tree/master/egs/gop_speechocean762) following its instruction. After the run finishes, you should see the performance of the baseline model with the ASR model you use.
 
