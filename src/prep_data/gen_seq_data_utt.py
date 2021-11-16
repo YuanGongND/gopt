@@ -56,32 +56,20 @@ def process_feat_seq_utt(feat, keys, utt2score):
 
     return seq_label
 
-def gen_phn_dict(label):
-    phn_dict = {}
-    phn_idx = 0
-    for i in range(label.shape[0]):
-        if label[i, 0] not in phn_dict:
-            phn_dict[label[i, 0]] = phn_idx
-            phn_idx += 1
-    return phn_dict
-
 # utt label dict
 with open('scores.json') as f:
     utt2score = json.loads(f.read())
 
 # sequencialize training data
-tr_feat = load_feat('../so762_datafiles/yuan_tr_feats.csv')
-tr_keys = load_keys('../so762_datafiles/yuan_tr_keys.csv')
-phn_dict = gen_phn_dict(tr_label)
-print(phn_dict)
+tr_feat = load_feat('../../data/raw_kaldi_gop/librispeech/tr_feats.csv')
+tr_keys = load_keys('../../data/raw_kaldi_gop/librispeech/tr_keys_phn.csv')
 tr_label = process_feat_seq_utt(tr_feat, tr_keys, utt2score)
 print(tr_label.shape)
 np.save('../../data/seq_data_librispeech/tr_label_utt.npy', tr_label)
 
 # sequencialize test data
-te_feat = load_feat('../so762_datafiles/yuan_te_feats.csv')
-te_keys = load_keys('../so762_datafiles/yuan_te_keys.csv')
+te_feat = load_feat('../../data/raw_kaldi_gop/librispeech/te_feats.csv')
+te_keys = load_keys('../../data/raw_kaldi_gop/librispeech/te_keys_phn.csv')
 te_label = process_feat_seq_utt(te_feat, te_keys, utt2score)
 print(te_label.shape)
 np.save('../../data/seq_data_librispeech/te_label_utt.npy', te_label)
-

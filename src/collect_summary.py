@@ -19,7 +19,6 @@ result = []
 # for each repeat experiment
 for i in range(0, 10):
     cur_exp_dir = args.exp_dir + '-' + str(i)
-    print(cur_exp_dir)
     if os.path.isfile(cur_exp_dir + '/result.csv'):
         try:
             print(cur_exp_dir)

@@ -30,7 +30,9 @@ If you want to use your own ASR model, you cannot skip step 1 and 2.
 Clone or download this repository and set it as the working directory, create a virtual environment and install the dependencies.
 
 ```
-cd gopt/ 
+# use absolute path of this repo
+gopt_path=your_gopt_path
+cd $gopt_path
 python3 -m venv venv-gopt
 source venv-gopt/bin/activate
 pip install -r requirements.txt 
@@ -46,7 +48,6 @@ Then, extract the GOP features from the intermediate files of the Kaldi GOP reci
 
 ```
 kaldi_path=your_kaldi_path
-gopt_path=your_gopt_path
 cd $gopt_path
 mkdir -p data/raw_kaldi_gop/librispeech
 cp src/extract_kaldi_gop/{extract_gop_feats.py,extract_gop_feats_word.py} ${kaldi_path}/egs/speechocean762/s5/local/
@@ -68,7 +69,7 @@ mkdir data/seq_data_librispeech
 cd src/prep_data
 python gen_seq_data_phn.py
 python gen_seq_data_word.py
-python gen_seq_data_word.py
+python gen_seq_data_utt.py
 ```
 
 
