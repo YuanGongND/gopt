@@ -1,6 +1,4 @@
-*.csv
 .DS_Store
 data/*
 !data/README.md
 data.zip
-!pretrained_models/*.csv
