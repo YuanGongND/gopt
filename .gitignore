@@ -2,3 +2,4 @@
 data/*
 !data/README.md
 data.zip
+data_old/*

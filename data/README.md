@@ -1,1 +1,0 @@
-Please download it from https://www.dropbox.com/s/mjz4n8nu8yxctos/data.zip?dl=0, uncompress it, and place it in this folder.
