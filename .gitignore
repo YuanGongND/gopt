@@ -6,3 +6,4 @@ data.zip
 data_old/*
 src/temp/*
 models/baseline.py
+src/get_summary.py

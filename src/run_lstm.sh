@@ -7,7 +7,7 @@
 #SBATCH -c 4
 #SBATCH -n 1
 #SBATCH --mem=24000
-#SBATCH --job-name="gopt"
+#SBATCH --job-name="lstm"
 #SBATCH --output=../exp/log_%j.txt
 
 set -x
@@ -17,13 +17,12 @@ source ../venv-gopt/bin/activate
 
 lr=1e-3
 depth=3
-head=1
 batch_size=25
-embed_dim=24
-model=gopt
+embed_dim=36
+model=lstm
 am=librispeech
 
-exp_dir=../exp/gopt-${lr}-${depth}-${head}-${batch_size}-${embed_dim}-${model}-${am}-r3
+exp_dir=../exp/lstm-${lr}-${depth}-${batch_size}-${embed_dim}-${model}-${am}
 
 # repeat times
 repeat_list=(0 1 2 3 4)
@@ -31,7 +30,7 @@ repeat_list=(0 1 2 3 4)
 for repeat in "${repeat_list[@]}"
 do
   mkdir -p $exp_dir-${repeat}
-  python ./traintest.py --lr ${lr} --exp-dir ${exp_dir}-${repeat} --goptdepth ${depth} --goptheads ${head} \
+  python ./traintest.py --lr ${lr} --exp-dir ${exp_dir}-${repeat} --goptdepth ${depth} --goptheads 1 \
   --batch_size ${batch_size} --embed_dim ${embed_dim} \
   --model ${model} --am ${am}
 done

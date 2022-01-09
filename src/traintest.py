@@ -230,6 +230,7 @@ def valid_phn(audio_output, target):
     audio_output = audio_output.squeeze(2)
     for i in range(audio_output.shape[0]):
         for j in range(audio_output.shape[1]):
+            # only count valid tokens, not padded tokens (represented by negative values)
             if target[i, j] >= 0:
                 valid_token_pred.append(audio_output[i, j])
                 valid_token_target.append(target[i, j])
@@ -251,7 +252,6 @@ def valid_utt(audio_output, target):
     return mse, corr
 
 def valid_word(audio_output, target):
-    # first squeeze/avg the word-level
     word_id = target[:, :, -1]
     target = target[:, :, 0:3]
 
@@ -268,12 +268,15 @@ def valid_word(audio_output, target):
         # for each token
         for j in range(target.shape[1]):
             cur_w_id = word_id[i, j].int()
+            # if a new word
             if cur_w_id != prev_w_id:
                 # average each phone belongs to the word
                 valid_token_pred.append(np.mean(audio_output[i, start_id: j, :].numpy(), axis=0))
                 valid_token_target.append(np.mean(target[i, start_id: j, :].numpy(), axis=0))
+                # sanity check, if the range indeed contains a single word
                 if len(torch.unique(target[i, start_id: j, 1])) != 1:
                     print(target[i, start_id: j, 0])
+                # if end of the utterance
                 if cur_w_id == -1:
                     break
                 else:
@@ -281,10 +284,11 @@ def valid_word(audio_output, target):
                     start_id = j
 
     valid_token_pred = np.array(valid_token_pred)
-    # this rounding is solving the precision issue in the label
+    # this rounding is to solve the precision issue in the label
     valid_token_target = np.array(valid_token_target).round(2)
 
     mse_list, corr_list = [], []
+    # for each (accuracy, stress, total) word score
     for i in range(3):
         valid_token_mse = np.mean((valid_token_target[:, i] - valid_token_pred[:, i]) ** 2)
         corr = np.corrcoef(valid_token_pred[:, i], valid_token_target[:, i])[0, 1]
@@ -361,6 +365,9 @@ if args.model == 'gopt':
 elif args.model == 'gopt_nophn':
     print('now train a GOPT models without canonical phone embedding')
     audio_mdl = GOPTNoPhn(embed_dim=args.embed_dim, num_heads=args.goptheads, depth=args.goptdepth, input_dim=input_dim)
+elif args.model == 'lstm':
+    print('now train a baseline LSTM model')
+    audio_mdl = BaselineLSTM(embed_dim=args.embed_dim, depth=args.goptdepth, input_dim=input_dim)
 
 tr_dataset = GoPDataset('train', am=am)
 tr_dataloader = DataLoader(tr_dataset, batch_size=args.batch_size, shuffle=True)

@@ -131,6 +131,7 @@ class Block(nn.Module):
         x = x + self.drop_path(self.mlp(self.norm2(x)))
         return x
 
+# standard GOPT model proposed in the paper
 class GOPT(nn.Module):
     def __init__(self, embed_dim, num_heads, depth, input_dim=84):
         super().__init__()
@@ -207,19 +208,24 @@ class GOPT(nn.Module):
         for blk in self.blocks:
             x = blk(x)
 
+        # the first 5 tokens are utterance-level cls tokens
         u1 = self.mlp_head_utt1(x[:, 0])
         u2 = self.mlp_head_utt2(x[:, 1])
         u3 = self.mlp_head_utt3(x[:, 2])
         u4 = self.mlp_head_utt4(x[:, 3])
         u5 = self.mlp_head_utt5(x[:, 4])
 
+        # 6th-end tokens are phone score tokens
         p = self.mlp_head_phn(x[:, 5:])
+
         # word score is propagated to phone-level, so word output is also at phone-level.
+        # but different mlp heads are used
         w1 = self.mlp_head_word1(x[:, 5:])
         w2 = self.mlp_head_word2(x[:, 5:])
         w3 = self.mlp_head_word3(x[:, 5:])
         return u1, u2, u3, u4, u5, p, w1, w2, w3
 
+# GOPT model without canonical phone embedding, performance worse than standard GOPT model
 class GOPTNoPhn(nn.Module):
     def __init__(self, embed_dim, num_heads, depth, input_dim=84):
         super().__init__()
