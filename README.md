@@ -18,7 +18,14 @@ GOPT is the first model to simultaneously consider *multiple* pronunciation qual
 ## Citing  
 Please cite our paper if you find this repository useful.
 
-TBD
+```
+@inproceedings{gong2022gopt,
+  title={TRANSFORMER-BASED MULTI-ASPECT MULTI-GRANULARITY NON-NATIVE ENGLISH SPEAKER PRONUNCIATION ASSESSMENT},
+  author={Gong, Yuan and Chen, Ziyi and Chu, Iek-Heng and Chang, Peng and Glass, James},
+  booktitle={ICASSP},
+  year={2022}
+}
+```
   
 ## Train and evaluate GOPT with speechocean 762 dataset
 
