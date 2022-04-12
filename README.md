@@ -10,9 +10,9 @@
 
 <p align="center"><img src="https://github.com/YuanGongND/gopt/blob/master/figure/gopt_rev.png?raw=true" alt="Illustration of GOPT." width="800"/></p>
 
-This repository contains the official implementation and pretrained model (in PyTorch) of the **Goodness Of Pronunciation Feature-Based Transformer (GOPT)** proposed in the ICASSP 2022 paper [Transformer-Based Multi-Aspect Multi-Granularity Non-native English Speaker Pronunciation Assessment](https://arxiv.org/abs/dummy) (Yuan Gong, Ziyi Chen, Iek-Heng Chu, Peng Chang, James Glass).  
+This repository contains the official implementation and pretrained model (in PyTorch) of the **Goodness Of Pronunciation Feature-Based Transformer (GOPT)** proposed in the ICASSP 2022 paper [Transformer-Based Multi-Aspect Multi-Granularity Non-native English Speaker Pronunciation Assessment](https://arxiv.org/abs/dummy) (Yuan Gong, Ziyi Chen, Iek-Heng Chu, Peng Chang, James Glass; MIT & PAII).  
 
-GOPT is the first model to simultaneously consider *multiple* pronunciation quality aspects (accuracy, fluency, prosody, etc) along with *multiple* granularities (phoneme, word, utterance). With a public automatic speech recognition (ASR) model, it achieves ``0.612`` phone-level Pearson correlation coefficient (PCC), ``0.549`` word-level PCC, and ``0.742`` sentence-level PCC.
+GOPT is the first model to simultaneously consider **multiple** pronunciation quality aspects (accuracy, fluency, prosody, etc) along with **multiple** granularities (phoneme, word, utterance). With a public automatic speech recognition (ASR) model, it achieves ``0.612`` phone-level Pearson correlation coefficient (PCC), ``0.549`` word-level PCC, and ``0.742`` sentence-level PCC.
 
 
 ## Citing  
@@ -29,8 +29,10 @@ Please cite our paper if you find this repository useful.
   
 ## Train and evaluate GOPT with speechocean 762 dataset
 
-The following is a step-by-step instruction of training and evaluating GOPT with the speechocean 762 dataset. If you are only interest in 
-If you want to use your own ASR model, you cannot skip step 1 and 2.
+The following is a step-by-step instruction of training and evaluating GOPT with the speechocean 762 dataset. 
+
+If you are not familiar with Kaldi, or you are not interested in GOPT feature generation, we provide our intermediate GOP features and this recipe is **Kaldi-Free** (please see below for details).
+Otherwise if you want to use your own ASR model, you can NOT skip step 1 and 2.
 
 **Step 0. Prepare the environment.**
 
@@ -47,9 +49,9 @@ pip install -r requirements.txt
 
 **Step 1. Prepare the speechocean762 dataset and generate the Godness of Pronunciation (GOP) features.**
 
-(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step and step 2 by using our output of this step ([download](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0)), please see [here](https://github.com/YuanGongND/gopt/tree/master/data) for details.)
+(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step and step 2 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)
 
-Downlod the [speechocean762](https://arxiv.org/abs/2104.01378) dataset from [here](https://www.openslr.org/101/). Use your own Kaldi ASR model or public Kaldi ASR model (e.g., the [Librispeech ASR Chain Model](https://kaldi-asr.org/models/m13) we used) and run [Kaldi GOP recipe](https://github.com/kaldi-asr/kaldi/tree/master/egs/gop_speechocean762) following its instruction. After the run finishes, you should see the performance of the baseline model with the ASR model you use.
+Downlod the [speechocean762](https://arxiv.org/abs/2104.01378) dataset from [[here]](https://www.openslr.org/101/). Use your own Kaldi ASR model or public Kaldi ASR model (e.g., the [Librispeech ASR Chain Model](https://kaldi-asr.org/models/m13) we used) and run [Kaldi GOP recipe](https://github.com/kaldi-asr/kaldi/tree/master/egs/gop_speechocean762) following its instruction. After the run finishes, you should see the performance of the baseline model with the ASR model you use.
 
 Then, extract the GOP features from the intermediate files of the Kaldi GOP recipe run. 
 
@@ -67,7 +69,7 @@ cp -r ${kaldi_path}/egs/speechocean762/s5/gopt_feats/* data/raw_kaldi_gop/libris
 
 **Step 2. Convert GOP features and labels to sequences**
 
-(You can skip this step and step 1 by using our output of this step ([download](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0)), please see [here](https://github.com/YuanGongND/gopt/tree/master/data) for details.)
+(You can skip this step and step 1 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)
 
 The Kaldi output GOP features and labels are at phone level. To model pronunciation assessment as a sequence-to-sequence problem, we need to convert the feature to shape like ``[#utterance, seq_len, feat_dim]``. 
 Specifically, we pad all utterance into 50 tokens (phones) with -1, i.e., ``seq_len=50``. The padded tokens are masked out for any metric calculation. 
