@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 **Step 1. Prepare the speechocean762 dataset and generate the Godness of Pronunciation (GOP) features.**
 
-(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step and step 2 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)
+*(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step and step 2 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)*
 
 Downlod the [speechocean762](https://arxiv.org/abs/2104.01378) dataset from [[here]](https://www.openslr.org/101/). Use your own Kaldi ASR model or public Kaldi ASR model (e.g., the [Librispeech ASR Chain Model](https://kaldi-asr.org/models/m13) we used) and run [Kaldi GOP recipe](https://github.com/kaldi-asr/kaldi/tree/master/egs/gop_speechocean762) following its instruction. After the run finishes, you should see the performance of the baseline model with the ASR model you use.
 
@@ -59,17 +59,17 @@ Then, extract the GOP features from the intermediate files of the Kaldi GOP reci
 kaldi_path=your_kaldi_path
 cd $gopt_path
 mkdir -p data/raw_kaldi_gop/librispeech
-cp src/extract_kaldi_gop/{extract_gop_feats.py,extract_gop_feats_word.py} ${kaldi_path}/egs/speechocean762/s5/local/
-cd ${kaldi_path}/egs/speechocean762/s5
+cp src/extract_kaldi_gop/{extract_gop_feats.py,extract_gop_feats_word.py} ${kaldi_path}/egs/gop_speechocean762/s5/local/
+cd ${kaldi_path}/egs/gop_speechocean762/s5
 python local/extract_gop_feats.py
 python local/extract_gop_feats_word.py
 cd $gopt_path
-cp -r ${kaldi_path}/egs/speechocean762/s5/gopt_feats/* data/raw_kaldi_gop/librispeech
+cp -r ${kaldi_path}/egs/gop_speechocean762/s5/gopt_feats/* data/raw_kaldi_gop/librispeech
 ```
 
 **Step 2. Convert GOP features and labels to sequences**
 
-(You can skip this step and step 1 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)
+*(You can skip this step and step 1 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)*
 
 The Kaldi output GOP features and labels are at phone level. To model pronunciation assessment as a sequence-to-sequence problem, we need to convert the feature to shape like ``[#utterance, seq_len, feat_dim]``. 
 Specifically, we pad all utterance into 50 tokens (phones) with -1, i.e., ``seq_len=50``. The padded tokens are masked out for any metric calculation. 
@@ -82,7 +82,6 @@ python gen_seq_data_phn.py
 python gen_seq_data_word.py
 python gen_seq_data_utt.py
 ```
-
 
 **Step 3. Run Training and Evaluation**
 
