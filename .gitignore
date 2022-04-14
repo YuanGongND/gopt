@@ -10,3 +10,4 @@ src/get_summary.py
 *.pdf
 .idea/*
 TODO.txt
+*result_old.csv
