@@ -33,6 +33,21 @@ parser.add_argument("--model", type=str, default='gopt', help="name of the model
 parser.add_argument("--am", type=str, default='librispeech', help="name of the acoustic models")
 parser.add_argument("--noise", type=float, default=0., help="the scale of random noise added on the input GoP feature")
 
+# just to generate the header for the result.csv
+def gen_result_header():
+    phn_header = ['epoch', 'phone_train_mse', 'phone_train_pcc', 'phone_test_mse', 'phone_test_pcc', 'learning rate']
+    utt_header_set = ['utt_train_mse', 'utt_train_pcc', 'utt_test_mse', 'utt_test_pcc']
+    utt_header_score = ['accuracy', 'completeness', 'fluency', 'prosodic', 'total']
+    word_header_set = ['word_train_pcc', 'word_test_pcc']
+    word_header_score = ['accuracy', 'stress', 'total']
+    utt_header, word_header = [], []
+    for dset in utt_header_set:
+        utt_header = utt_header + [dset+'_'+x for x in utt_header_score]
+    for dset in word_header_set:
+        word_header = word_header + [dset+'_'+x for x in word_header_score]
+    header = phn_header + utt_header + word_header
+    return header
+
 def train(audio_model, train_loader, test_loader, args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print('running on ' + str(device))
@@ -58,7 +73,7 @@ def train(audio_model, train_loader, test_loader, args):
 
     print("current #steps=%s, #epochs=%s" % (global_step, epoch))
     print("start training...")
-    result = np.zeros([args.n_epochs, 31])
+    result = np.zeros([args.n_epochs, 32])
 
     while epoch < args.n_epochs:
         audio_model.train()
@@ -128,13 +143,14 @@ def train(audio_model, train_loader, test_loader, args):
         print('Utterance:, ACC: {:.3f}, COM: {:.3f}, FLU: {:.3f}, PROC: {:.3f}, Total: {:.3f}'.format(te_utt_corr[0], te_utt_corr[1], te_utt_corr[2], te_utt_corr[3], te_utt_corr[4]))
         print('Word:, ACC: {:.3f}, Stress: {:.3f}, Total: {:.3f}'.format(te_word_corr[0], te_word_corr[1], te_word_corr[2]))
 
-        result[epoch, :5] = [tr_mse, tr_corr, te_mse, te_corr, optimizer.param_groups[0]['lr']]
+        result[epoch, :6] = [epoch, tr_mse, tr_corr, te_mse, te_corr, optimizer.param_groups[0]['lr']]
 
-        result[epoch, 5:25] = np.concatenate([tr_utt_mse, tr_utt_corr, te_utt_mse, te_utt_corr])
+        result[epoch, 6:26] = np.concatenate([tr_utt_mse, tr_utt_corr, te_utt_mse, te_utt_corr])
 
-        result[epoch, 25:31] = np.concatenate([tr_word_corr, te_word_corr])
+        result[epoch, 26:32] = np.concatenate([tr_word_corr, te_word_corr])
 
-        np.savetxt(exp_dir + '/result.csv', result, delimiter=',')
+        header = ','.join(gen_result_header())
+        np.savetxt(exp_dir + '/result.csv', result, delimiter=',', header=header)
         print('-------------------validation finished-------------------')
 
         if te_mse < best_mse:

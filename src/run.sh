@@ -23,7 +23,7 @@ embed_dim=24
 model=gopt
 am=librispeech
 
-exp_dir=../exp/gopt-${lr}-${depth}-${head}-${batch_size}-${embed_dim}-${model}-${am}-r3
+exp_dir=../exp/gopt-${lr}-${depth}-${head}-${batch_size}-${embed_dim}-${model}-${am}-br
 
 # repeat times
 repeat_list=(0 1 2 3 4)

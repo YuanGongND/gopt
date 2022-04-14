@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 **Step 1. Prepare the speechocean762 dataset and generate the Godness of Pronunciation (GOP) features.**
 
-*(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step and step 2 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)*
+*(This step is Kaldi dependent and require familiarity with Kaldi. You can skip this step and step 2 by using our output of this step (download via the [dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.))*
 
 Downlod the [speechocean762](https://arxiv.org/abs/2104.01378) dataset from [[here]](https://www.openslr.org/101/). Use your own Kaldi ASR model or public Kaldi ASR model (e.g., the [Librispeech ASR Chain Model](https://kaldi-asr.org/models/m13) we used) and run [Kaldi GOP recipe](https://github.com/kaldi-asr/kaldi/tree/master/egs/gop_speechocean762) following its instruction. After the run finishes, you should see the performance of the baseline model with the ASR model you use.
 
@@ -69,7 +69,7 @@ cp -r ${kaldi_path}/egs/gop_speechocean762/s5/gopt_feats/* data/raw_kaldi_gop/li
 
 **Step 2. Convert GOP features and labels to sequences**
 
-*(You can skip this step and step 1 by using our output of this step ([dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.)*
+*(You can skip this step and step 1 by using our output of this step (download via the [dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=0) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.))*
 
 The Kaldi output GOP features and labels are at phone level. To model pronunciation assessment as a sequence-to-sequence problem, we need to convert the feature to shape like ``[#utterance, seq_len, feat_dim]``. 
 Specifically, we pad all utterance into 50 tokens (phones) with -1, i.e., ``seq_len=50``. The padded tokens are masked out for any metric calculation. 
@@ -106,7 +106,7 @@ We provide three pretrained models and corresponding training logs. They are in 
 | GOPT (PAII-A)      |  0.069  |  0.679  |     0.595    |     0.150    |      0.606     |    0.727    |    -0.044    |    0.692    |     0.695    |     0.731     |
 | GOPT (PAII-B)      |  0.071  |  0.664  |     0.592    |     0.174    |      0.602     |    0.722    |     0.122    |    0.721    |     0.723    |     0.740     |
 
-- **Training Logs**: Training logs are in ``gopt_{librispeech,paiia,paiib}/result.csv`` in shape  ``[num_epoch, #metrics]`` where there are in total 31 metrics:  ``[1-4]`` are phone-level training mse, training pcc, test mse, test pcc, respectively; ``[5]`` is the learning rate of the epoch;
+- **Training Logs**: Training logs are in ``gopt_{librispeech,paiia,paiib}/result.csv`` in shape  ``[num_epoch, #metrics]`` where there are in total 32 columns: ``[0]`` is the epoch id, ``[1-4]`` are phone-level training mse, training pcc, test mse, test pcc, respectively; ``[5]`` is the learning rate of the epoch;
 ``[6-10, 11-15, 16-20, 21-25]`` are utterance-level training mse, training pcc, test mse, test pcc, respectively, each contains 5 scores of ``accuracy, completeness, fluency, prosodic, total``.
 ``[26-28, 29-31]`` are word-level training pcc and test pcc, respectively, each contains 3 scores of ``accuracy, stress, total``.
 

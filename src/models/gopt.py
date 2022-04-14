@@ -149,15 +149,15 @@ class GOPT(nn.Module):
         self.in_proj = nn.Linear(self.input_dim, embed_dim)
         self.mlp_head_phn = nn.Sequential(nn.LayerNorm(embed_dim), nn.Linear(embed_dim, 1))
 
-        # for word classification
+        # for word classification, 1=accuracy, 2=stress, 3=total
         self.mlp_head_word1 = nn.Sequential(nn.LayerNorm(embed_dim), nn.Linear(embed_dim, 1))
         self.mlp_head_word2 = nn.Sequential(nn.LayerNorm(embed_dim), nn.Linear(embed_dim, 1))
         self.mlp_head_word3 = nn.Sequential(nn.LayerNorm(embed_dim), nn.Linear(embed_dim, 1))
 
-        # canonical phone projection
+        # canonical phone projection, assume there are 40 phns
         self.phn_proj = nn.Linear(40, embed_dim)
 
-        # utterance level
+        # utterance level, 1=accuracy, 2=completeness, 3=fluency, 4=prosodic, 5=total score
         self.cls_token1 = nn.Parameter(torch.zeros(1, 1, embed_dim))
         self.mlp_head_utt1 = nn.Sequential(nn.LayerNorm(embed_dim), nn.Linear(embed_dim, 1))
         self.cls_token2 = nn.Parameter(torch.zeros(1, 1, embed_dim))
@@ -208,7 +208,7 @@ class GOPT(nn.Module):
         for blk in self.blocks:
             x = blk(x)
 
-        # the first 5 tokens are utterance-level cls tokens
+        # the first 5 tokens are utterance-level cls tokens, i.e., accuracy, completeness, fluency, prosodic, total scores
         u1 = self.mlp_head_utt1(x[:, 0])
         u2 = self.mlp_head_utt2(x[:, 1])
         u3 = self.mlp_head_utt3(x[:, 2])
@@ -219,7 +219,7 @@ class GOPT(nn.Module):
         p = self.mlp_head_phn(x[:, 5:])
 
         # word score is propagated to phone-level, so word output is also at phone-level.
-        # but different mlp heads are used
+        # but different mlp heads are used, 1 = accuracy, 2 = stress, 3 = total
         w1 = self.mlp_head_word1(x[:, 5:])
         w2 = self.mlp_head_word2(x[:, 5:])
         w3 = self.mlp_head_word3(x[:, 5:])
