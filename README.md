@@ -8,6 +8,7 @@
 
 ## Introduction  
 
+<p align="center"><img src="https://raw.githubusercontent.com/YuanGongND/gopt/master/figure/gopt_poster.png?token=GHSAT0AAAAAABHNWFG3TQB7DLK6ABX2IBSEYTJSGHA" alt="Illustration of GOPT." width="800"/></p>
 <p align="center"><img src="https://github.com/YuanGongND/gopt/blob/master/figure/gopt_rev.png?raw=true" alt="Illustration of GOPT." width="800"/></p>
 
 This repository contains the official implementation and pretrained model (in PyTorch) of the **Goodness Of Pronunciation Feature-Based Transformer (GOPT)** proposed in the ICASSP 2022 paper [Transformer-Based Multi-Aspect Multi-Granularity Non-native English Speaker Pronunciation Assessment](https://arxiv.org/abs/dummy) (Yuan Gong, Ziyi Chen, Iek-Heng Chu, Peng Chang, James Glass; MIT & PAII).  
