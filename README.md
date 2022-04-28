@@ -22,7 +22,7 @@ We intend to make our results easy to reproduce, specifically, we provide our Ka
 Please cite our paper if you find this repository useful.
 
 ```
-@INPROCEEDINGS{9746743,
+@INPROCEEDINGS{gong_gopt,
   author={Gong, Yuan and Chen, Ziyi and Chu, Iek-Heng and Chang, Peng and Glass, James},
   booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
   title={Transformer-Based Multi-Aspect Multi-Granularity Non-Native English Speaker Pronunciation Assessment}, 
