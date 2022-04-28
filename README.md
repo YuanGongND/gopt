@@ -11,7 +11,7 @@
 <p align="center"><img src="https://raw.githubusercontent.com/YuanGongND/gopt/master/figure/gopt_poster.png?token=GHSAT0AAAAAABHNWFG3TQB7DLK6ABX2IBSEYTJSGHA" alt="Illustration of GOPT." width="800"/></p>
 <p align="center"><img src="https://github.com/YuanGongND/gopt/blob/master/figure/gopt_rev.png?raw=true" alt="Illustration of GOPT." width="800"/></p>
 
-This repository contains the official implementation and pretrained model (in PyTorch) of the **Goodness Of Pronunciation Feature-Based Transformer (GOPT)** proposed in the ICASSP 2022 paper [Transformer-Based Multi-Aspect Multi-Granularity Non-native English Speaker Pronunciation Assessment](https://arxiv.org/abs/dummy) (Yuan Gong, Ziyi Chen, Iek-Heng Chu, Peng Chang, James Glass; MIT & PAII).  
+This repository contains the official implementation and pretrained model (in PyTorch) of the **Goodness Of Pronunciation Feature-Based Transformer (GOPT)** proposed in the ICASSP 2022 paper [Transformer-Based Multi-Aspect Multi-Granularity Non-native English Speaker Pronunciation Assessment](https://ieeexplore.ieee.org/document/9746743) (Yuan Gong, Ziyi Chen, Iek-Heng Chu, Peng Chang, James Glass; MIT & PAII).  
 
 GOPT is the first model to simultaneously consider **multiple** pronunciation quality aspects (accuracy, fluency, prosody, etc) along with **multiple** granularities (phoneme, word, utterance). With a public automatic speech recognition (ASR) model, it achieves ``0.612`` phone-level Pearson correlation coefficient (PCC), ``0.549`` word-level PCC, and ``0.742`` sentence-level PCC, all are the best results on SpeechOcean762.
 
@@ -22,12 +22,13 @@ We intend to make our results easy to reproduce, specifically, we provide our Ka
 Please cite our paper if you find this repository useful.
 
 ```
-@inproceedings{gong2022gopt,
-  title={TRANSFORMER-BASED MULTI-ASPECT MULTI-GRANULARITY NON-NATIVE ENGLISH SPEAKER PRONUNCIATION ASSESSMENT},
+@INPROCEEDINGS{9746743,
   author={Gong, Yuan and Chen, Ziyi and Chu, Iek-Heng and Chang, Peng and Glass, James},
-  booktitle={ICASSP},
-  year={2022}
-}
+  booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Transformer-Based Multi-Aspect Multi-Granularity Non-Native English Speaker Pronunciation Assessment}, 
+  year={2022},
+  pages={7262-7266},
+  doi={10.1109/ICASSP43922.2022.9746743}}
 ```
   
 ## Train and evaluate GOPT with speechocean 762 dataset
