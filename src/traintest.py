@@ -150,7 +150,7 @@ def train(audio_model, train_loader, test_loader, args):
         result[epoch, 26:32] = np.concatenate([tr_word_corr, te_word_corr])
 
         header = ','.join(gen_result_header())
-        np.savetxt(exp_dir + '/result.csv', result, delimiter=',', header=header)
+        np.savetxt(exp_dir + '/result.csv', result, delimiter=',', header=header, comments='')
         print('-------------------validation finished-------------------')
 
         if te_mse < best_mse:
