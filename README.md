@@ -15,7 +15,7 @@ This repository contains the official implementation and pretrained model (in Py
 
 GOPT is the first model to simultaneously consider **multiple** pronunciation quality aspects (accuracy, fluency, prosody, etc) along with **multiple** granularities (phoneme, word, utterance). With a public automatic speech recognition (ASR) model, it achieves ``0.612`` phone-level Pearson correlation coefficient (PCC), ``0.549`` word-level PCC, and ``0.742`` sentence-level PCC, all are the best results on SpeechOcean762.
 
-We intend to make our results easy to reproduce, specifically, we provide our Kaldi intermediate outputs so that you can reproduce our result **without** Kaldi in almost one-click (just download our Kaldi output and `./run.sh`, or even more simpler, run the Google Colab script  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YuanGongND/gopt/blob/main/colab/GOPT.ipynb)).
+We intend to make our results easy to reproduce, specifically, we provide our Kaldi intermediate outputs so that you can reproduce our result **without** Kaldi in almost one-click (just download our Kaldi output and `./run.sh`, or even more simpler, run the Google Colab script [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YuanGongND/gopt/blob/master/colab/GOPT.ipynb)).
 
 
 ## Citing  
@@ -31,7 +31,25 @@ Please cite our paper if you find this repository useful.
   doi={10.1109/ICASSP43922.2022.9746743}}
 ```
   
-## Train and evaluate GOPT with speechocean 762 dataset
+## (Google Colab Scripts) Train and evaluate GOPT with speechocean 762 dataset
+
+We provide Google Colab Script for quick test. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YuanGongND/gopt/blob/master/colab/GOPT.ipynb). 
+
+**What you need:** 
+- A free google account.
+  - A (paid) Google Colab Pro plan could speed up training, but is not necessary. Free version can run the script, just a bit slower.
+
+**What you don't need:** 
+- Download GOP features manually (The Colab script download it to cloud automatically)
+- GPU or any other hardware (Google Colab provides free GPUs)
+- Any enviroment setting and package installation (Google Colab provides a ready-to-use environment)
+- A specific operating system (You only need a web browser, e.g., Chrome)
+
+**Please Note**
+- This script is slightly different with our local script, thus the results might also be slightly different, though in our test, they are very close.
+- This script does not extract Kaldi GOP features, instead, it loads our Kaldi GOP features. If you want to extract the feature by yourself, see local scripts below.
+
+## (Local Scripts) Train and evaluate GOPT with speechocean 762 dataset
 
 The following is a step-by-step instruction of training and evaluating GOPT with the speechocean 762 dataset. 
 
