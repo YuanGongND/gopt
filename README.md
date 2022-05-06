@@ -33,7 +33,7 @@ Please cite our paper if you find this repository useful.
   
 ## (Google Colab Scripts) Train and evaluate GOPT with speechocean 762 dataset
 
-We provide Google Colab Script for quick test. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YuanGongND/gopt/blob/master/colab/GOPT.ipynb). 
+We provide Google Colab Script [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YuanGongND/gopt/blob/master/colab/GOPT.ipynb) for quick test. 
 
 **What you need:** 
 - A free google account.
