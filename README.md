@@ -15,7 +15,7 @@ This repository contains the official implementation and pretrained model (in Py
 
 GOPT is the first model to simultaneously consider **multiple** pronunciation quality aspects (accuracy, fluency, prosody, etc) along with **multiple** granularities (phoneme, word, utterance). With a public automatic speech recognition (ASR) model, it achieves ``0.612`` phone-level Pearson correlation coefficient (PCC), ``0.549`` word-level PCC, and ``0.742`` sentence-level PCC, all are the best results on SpeechOcean762.
 
-We intend to make our results easy to reproduce, specifically, we provide our Kaldi intermediate outputs so that you can reproduce our result **without** Kaldi in almost one-click (just download our Kaldi output and `./run.sh`, that's it).
+We intend to make our results easy to reproduce, specifically, we provide our Kaldi intermediate outputs so that you can reproduce our result **without** Kaldi in almost one-click (just download our Kaldi output and `./run.sh`, or even more simpler, run the Google Colab script  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YuanGongND/gopt/blob/main/colab/GOPT.ipynb)).
 
 
 ## Citing  
