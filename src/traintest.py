@@ -15,7 +15,6 @@ sys.path.append(os.path.dirname(os.path.dirname(sys.path[0])))
 
 from models import *
 import argparse
-from torch.utils.data import WeightedRandomSampler
 
 print("I am process %s, running on %s: starting (%s)" % (os.getpid(), os.uname()[1], time.asctime()))
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)

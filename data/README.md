@@ -1,7 +1,7 @@
 If you want to skip Kaldi GOP recipe and data preprocessing, you can use our intermediate files and directly go to step 3.
 This is useful if you do not want to change the acoustic model and save some time. It also makes it easy to fairly compare your own model with our GOPT model. 
 
-Download from this [dropbox link](https://www.dropbox.com/s/va5q4whyp18rd1i/data.zip?dl=1) or [腾讯微云链接](https://share.weiyun.com/BWCK7H8Z), extract from the compressed package, and place the folds in this directory in the following format.
+Download from this [dropbox link](https://www.dropbox.com/s/zc6o1d8rqq28vci/data.zip?dl=1) or [腾讯微云链接](https://share.weiyun.com/vJCAXjFY), extract from the compressed package, and place the folds in this directory in the following format.
 
 ```
 data
