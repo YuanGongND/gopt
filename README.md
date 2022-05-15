@@ -34,7 +34,7 @@ Please cite our paper if you find this repository useful.
 
 ## Data
 
-The SpeechOcean762 dataset used in ths paper is an open dataset collected licenced with CC BY 4.0. It can be downloaded from [this link](https://www.openslr.org/101).
+The SpeechOcean762 dataset used in ths paper is an open dataset licenced with CC BY 4.0. It can be downloaded from [this link](https://www.openslr.org/101).
 
 ## (Google Colab Scripts) Train and evaluate GOPT with speechocean 762 dataset
 
