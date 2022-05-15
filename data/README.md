@@ -1,3 +1,5 @@
+The SpeechOcean762 dataset used in ths paper is an open dataset collected licenced with CC BY 4.0. It can be downloaded from [this link](https://www.openslr.org/101).
+
 If you want to skip Kaldi GOP recipe and data preprocessing, you can use our intermediate files and directly go to step 3.
 This is useful if you do not want to change the acoustic model and save some time. It also makes it easy to fairly compare your own model with our GOPT model. 
 

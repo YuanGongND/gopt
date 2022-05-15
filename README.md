@@ -1,6 +1,7 @@
 # GOPT: Transformer-Based Multi-Aspect Multi-Granularity Non-Native English Speaker Pronunciation Assessment
  - [Introduction](#Introduction)
  - [Citing](#Citing)  
+ - [Data](#Data)
  - [Train and evaluate GOPT with speechocean 762 dataset](#Train-and-evaluate-GOPT-with-speechocean-762-dataset)
  - [Pretrained Models](#Pretrained-Models)
  - [Test Your Own Model with Our Speechocean762 Traning Pipeline](#Test-Your-Own-Model-with-Our-Speechocean762-Traning-Pipeline)
@@ -30,7 +31,11 @@ Please cite our paper if you find this repository useful.
   pages={7262-7266},
   doi={10.1109/ICASSP43922.2022.9746743}}
 ```
-  
+
+## Data
+
+The SpeechOcean762 dataset used in ths paper is an open dataset collected licenced with CC BY 4.0. It can be downloaded from [this link](https://www.openslr.org/101).
+
 ## (Google Colab Scripts) Train and evaluate GOPT with speechocean 762 dataset
 
 We provide Google Colab Script [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YuanGongND/gopt/blob/master/colab/GOPT_GPU.ipynb) for quick test. 
