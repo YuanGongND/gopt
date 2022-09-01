@@ -94,6 +94,8 @@ cd $gopt_path
 cp -r ${kaldi_path}/egs/gop_speechocean762/s5/gopt_feats/* data/raw_kaldi_gop/librispeech
 ```
 
+For questions regarding the Kaldi recipe (e.g., how to generate GOP feature for a single wav file), please kindly check the issues of the Kaldi GOP recipe at [[here]](https://github.com/kaldi-asr/kaldi/issues?q=is%3Aissue+gop).
+
 **Step 2. Convert GOP features and labels to sequences**
 
 *(You can skip this step and step 1 by using our output of this step (download via the [dropbox link](https://www.dropbox.com/s/zc6o1d8rqq28vci/data.zip?dl=1) or [腾讯微云链接](https://share.weiyun.com/vJCAXjFY), please see [[here]](https://github.com/YuanGongND/gopt/tree/master/data) for details.))*
@@ -151,4 +153,5 @@ Specifically, your model need to be in ``pytorch`` and take input and generate o
 Add your model to ``gopt/src/models/``, modify ``gopt/src/models/__init__.py`` and ``gopt/src/traintest.py`` to include your model. Then just follow the [instructions](#Train-and-evaluate-GOPT-with-speechocean-762-dataset). You can skip step 1 and 2 by using our intermediate data files. 
 
  ## Contact
-If you have a question, please bring up an issue (preferred) or send me an email yuangong@mit.edu.
+If you have a question, please bring up an issue (preferred) or send me an email yuangong@mit.edu. For questions regarding the Kaldi recipe (e.g., how to generate GOP feature for a single wav file), please kindly check the issues of the Kaldi GOP recipe at [[here]](https://github.com/kaldi-asr/kaldi/issues?q=is%3Aissue+gop).
+
