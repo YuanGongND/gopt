@@ -23,11 +23,65 @@ There will be some restrictions on "any data", I will explain it later.
     0001 test
     ```
     
-    You can infer how to write the rest.
+    If you are dealing with multiple data, remember Kaldi requires to keep sorting correctly. It is recommended to use the same system as speechocean762 did. Here is my code example of doing this. (My dataset contains columns `id_user`, `word` (transcript) and `file_name` (which is a path)). The `lexicon_dict_l` contains word -> suffx/prefix added phones. If you are interestd, the generation of such dict can be seen in the end of this tutorial.
+
+    ```python
+    scp_file = "wav.scp"
+    spk2utt = "spk2utt"
+    utt2spk = "utt2spk"
+    text = "text"
+    scp_str = ""
+    spk2utt_str = ""
+    utt2spk_str = ""
+    text_str = ""
+    text_phone = ""
+    id_list = ["%04d" % x for x in range(10000)]
+    speaker_hist = set()
+    dataset.sort_values(by="id_user", ascending=True, inplace=True)
+    j = 0
+    holder = ""
+    cache = ""
+    for _, line in dataset.iterrows():
+        speaker_hist.add(line.id_user)
+        spk = id_list[len(speaker_hist)]
+        if cache == "":
+            cache = spk
+        utt = spk + id_list[j]
+        j += 1
+        scp_str = scp_str + utt + ' ' + f"WAVE/{line.file_name}\n"
+        if cache != spk:
+            spk2utt_str = spk2utt_str + holder + '\n'
+            holder = ""
+        if len(holder)==0:
+            holder = spk + " " + utt
+        else:
+            holder = holder + " " + utt
+        cache = spk
+        utt2spk_str = utt2spk_str + utt + " " + spk + '\n'
+        text_str = text_str + utt + " " + line.word.upper() + '\n' 
+        text_phone = text_phone + utt + ".0\t" + lexicon_dict_l[line.word.upper()] + '\n'
+    else:
+        spk2utt_str = spk2utt_str + holder + '\n'
+
+    with open(scp_file, 'w') as f:
+        f.write(scp_str)
+
+    with open(spk2utt, 'w') as f:
+        f.write(spk2utt_str)
+
+    with open(utt2spk, 'w') as f:
+        f.write(utt2spk_str)
+
+    with open(text, 'w') as f:
+        f.write(text_str)
+
+    with open("text-phone", 'w') as f:
+        f.write(text_phone)
+    ```
     
 8. In `resource/text-phone`, delete unnecessary lines and replace your own. Here, each lines begins with \<utt_id\>.\<n\> which represents the n-th word in your text. After it, please append the corresponding phones of that word. 
     
-    To be specific, find your corresponding phones in `resource/lexicon.txt`. For instance, the word FAN would be `F AE0 N`. For all the first phones, add an additional suffix B, for the last phones, add an additional suffix E and for all others, add the suffix I.
+    To be specific, find your corresponding phones in `resource/lexicon.txt`. For instance, the word FAN would be `F AE0 N`. For all the first phones, add an additional suffix B, for the last phones, add an additional suffix E and for all others, add the suffix I. If there is only one phone, add the suffix S.
     
     For example, if my text is “FAN WORKS”, the final result in text-phone is
     
@@ -36,7 +90,7 @@ There will be some restrictions on "any data", I will explain it later.
     test.1 W_B ER0_I K_I S_E
     ```
     
-    If your don’t do this right, you will stuck at stage 8.
+    If your don’t do this right, you will stuck at stage 7.
     
 9. Download and extract all tars in [https://kaldi-asr.org/models/m13](https://kaldi-asr.org/models/m13)
 10. In `gop_speechocean762/s5/run.sh` , change lines 38-42 to your extracted results. In my case, I use
@@ -93,7 +147,7 @@ There will be some restrictions on "any data", I will explain it later.
     
 18. Change another GOPT file, `src/prep_data/gen_seq_data_phn.py`. Because we do not have score any more, all we want to have is the phn. Also we need to replace the hardcoding path to \<your dataset name\>. You can debug it yourself, here is my edited results.
     
-    ```
+    ```python
     # -*- coding: utf-8 -*-
     # @Time    : 9/19/21 11:13 PM
     # @Author  : Yuan Gong
@@ -218,18 +272,41 @@ There will be some restrictions on "any data", I will explain it later.
     gopt = torch.nn.DataParallel(gopt)
     sd = torch.load('gopt_librispeech/best_audio_model.pth', map_location='cpu')
     gopt.load_state_dict(sd, strict=True)
-    
+
     import numpy as np
-    input_feat = np.load("<your_path>/te_feat.npy")
-    input_phn = np.load("<your_path>/te_label_phn.npy")
-    t_input_feat = torch.from_numpy(input_feat)
-    t_phn = torch.from_numpy(input_phn[:,:,0])
+    input_feat = np.load("te_feat.npy")
+    input_phn = np.load("te_label_phn.npy")
     gopt = gopt.float()
     gopt.eval()
     with torch.no_grad():
-        print(gopt(t_input_feat.float(),t_phn.float()))
+        t_input_feat = torch.from_numpy(input_feat[:,:,:])
+        t_phn = torch.from_numpy(input_phn[:,:,0])
+        u1, u2, u3, u4, u5, p, w1, w2, w3 = gopt(t_input_feat.float(),t_phn.float())
     ```
     
-
 Good Luck!
-Restrictions: If your text contains words that are not in lexicon, you are out of luck.
+
+PS:
+1. Suggestion: If your text contains words that are not in lexicon, I recommend always replace the content of `lexicon.txt` in speechocean762 with the `librispeech-lexicon.txt` from http://www.openslr.org/11/.
+2. Example Code of cleaning the `librispeech-lexicon.txt`:
+    ```python
+    with open("librispeech-lexicon.txt", 'r') as f:
+        lexicon_raw = f.read()
+        rows = lexicon_raw.splitlines()
+    clean_rows = [row.split() for row in rows]
+    lexicon_dict_l = dict()
+    for row in clean_rows:
+        c_row = row.copy()
+        key = c_row.pop(0)
+        if len(c_row) == 1:
+            c_row[0] = c_row[0] + '_S'
+        if len(c_row) >= 2:
+            c_row[0] = c_row[0] + '_B'
+            c_row[-1] = c_row[-1] + '_E'
+        if len(c_row) > 2:
+            for i in range(1,len(c_row)-1):
+                c_row[i] = c_row[i] + '_I'
+        val = " ".join(c_row)
+        lexicon_dict_l[key] = val
+    lexicon_dict_l
+    ```
